@@ -1,7 +1,5 @@
-const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
-const cors = require("cors");
 
 const {
   addUser,
@@ -13,20 +11,15 @@ const {
 
 const PORT = process.env.PORT || 5000;
 
-const router = require("./router");
-
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-
-app.use(cors());
-app.use(router);
-
-app.get("/api", (req, res) => {
-  res.json({
-    message: "Hello world",
-  });
+const server = http.createServer((req, res) => {
+  // console.log("hh");
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+  };
+  res.writeHead(200, headers);
+  res.end();
 });
+const io = socketio(server);
 
 io.on("connection", (socket) => {
   socket.on("join", ({ name, room }, callback) => {
